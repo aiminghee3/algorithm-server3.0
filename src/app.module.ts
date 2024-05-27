@@ -6,6 +6,7 @@ import { envValidationSchema } from './config/env-validation.config';
 import { winstonConfigFactory } from './config/winston-config';
 import { WinstonModule } from 'nest-winston';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MemberModule } from './module/member/member.module';
 
 @Module({
   // 환경변수 파일 검사
@@ -28,6 +29,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
     // Logger 설정
     WinstonModule.forRootAsync(winstonConfigFactory),
+    MemberModule,
   ],
   controllers: [AppController],
   providers: [AppService],

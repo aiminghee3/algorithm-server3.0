@@ -8,7 +8,7 @@ export const SignUpDescription = () => {
   return applyDecorators(
     ApiOperation({
       summary: '사이트 회원가입',
-      description: '비밀번호는 9~15영문 특수문자포함',
+      description: '비밀번호는 8~15영문 특수문자포함',
       deprecated: false,
     }),
     ApiOkResponse({
