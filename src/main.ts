@@ -17,7 +17,6 @@ async function bootstrap() {
   });
   SwaggerModule.setup('api-docs', app, document);
   app.use(cookieParser());
-
   await app.listen(port);
   console.log(`listening on port ${port}`);
 }
