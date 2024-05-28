@@ -1,5 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Post } from '../../post/entity/post.entity';
+import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()
 export class Member {
@@ -12,6 +20,15 @@ export class Member {
   @Column()
   password: string;
 
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  deletedAt: Date;
+
   @OneToMany(() => Post, (post: Post) => post.member)
   posts: Post[];
+
+  @OneToMany(() => Comment, (comments: Comment) => comments.member)
+  comments: Comment[];
 }

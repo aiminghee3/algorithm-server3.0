@@ -4,6 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -13,6 +14,7 @@ import { number } from 'joi';
 import { text } from 'express';
 import { Member } from '../../member/entity/member.entity';
 import { Image } from '../../image/entity/image.entity';
+import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()
 export class Post {
@@ -78,6 +80,9 @@ export class Post {
 
   @ManyToOne(() => Member, (member: Member) => member.posts)
   member: Member;
+
+  @OneToMany(() => Comment, (comments: Comment) => comments.post)
+  comments: Comment[];
 
   @OneToOne(() => Image, (image: Image) => image.post)
   @JoinColumn()
