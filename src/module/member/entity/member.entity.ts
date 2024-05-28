@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { UUID } from 'typeorm/driver/mongodb/bson.typings';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Post } from '../../post/entity/post.entity';
 
 @Entity()
 export class Member {
@@ -11,4 +11,7 @@ export class Member {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Post, (post: Post) => post.member)
+  posts: Post[];
 }
