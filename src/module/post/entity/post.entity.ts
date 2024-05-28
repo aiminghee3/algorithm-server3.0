@@ -1,13 +1,20 @@
 import {
   Column,
   CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { number } from 'joi';
 import { text } from 'express';
+import { Member } from '../../member/entity/member.entity';
+import { Image } from '../../image/entity/image.entity';
 
+@Entity()
 export class Post {
   @PrimaryGeneratedColumn()
   @ApiProperty({ description: 'id' })
@@ -50,13 +57,6 @@ export class Post {
 
   @Column()
   @ApiProperty({
-    type: number,
-    example: '난이도',
-  })
-  difficulty: string;
-
-  @Column()
-  @ApiProperty({
     type: Date,
     example: '알림받을날짜',
   })
@@ -75,4 +75,11 @@ export class Post {
     example: '수정일자',
   })
   updatedAt: Date;
+
+  @ManyToOne(() => Member, (member: Member) => member.posts)
+  member: Member;
+
+  @OneToOne(() => Image, (image: Image) => image.post)
+  @JoinColumn()
+  image: Image;
 }
