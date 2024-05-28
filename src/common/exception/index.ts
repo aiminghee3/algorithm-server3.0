@@ -12,3 +12,9 @@ export class ExceptionWithMessage extends HttpException {
     this.errorCode = errorCode;
   }
 }
+
+export class AlreadyExistedException extends ExceptionWithMessage {
+  constructor(description?: string) {
+    super(`Already Existed ${description}`, 409, 'already_existed');
+  }
+}

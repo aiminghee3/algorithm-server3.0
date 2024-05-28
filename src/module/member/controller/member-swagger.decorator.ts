@@ -2,7 +2,7 @@ import { applyDecorators, NotFoundException } from '@nestjs/common';
 import { ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 import { CreatedTimeResponse } from '../../../common/dto/created-time.dto';
-import { AlreadyExistedException } from '../../auth/exception/auth.exception';
+import { AlreadyExistedException } from '../../../common/exception';
 
 export const SignUpDescription = () => {
   return applyDecorators(

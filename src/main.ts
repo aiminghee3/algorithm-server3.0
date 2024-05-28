@@ -7,7 +7,6 @@ import { VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
   const port = process.env.PORT || 8000;
 
   app.enableCors();
@@ -15,6 +14,8 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
+
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, document);
   app.use(cookieParser());
   await app.listen(port);
