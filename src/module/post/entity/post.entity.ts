@@ -15,6 +15,7 @@ import { text } from 'express';
 import { Member } from '../../member/entity/member.entity';
 import { Image } from '../../image/entity/image.entity';
 import { Comment } from '../../comment/entity/comment.entity';
+import { PostHashtag } from './postHashtag.entity';
 
 @Entity()
 export class Post {
@@ -83,6 +84,9 @@ export class Post {
 
   @OneToMany(() => Comment, (comments: Comment) => comments.post)
   comments: Comment[];
+
+  @OneToMany(() => PostHashtag, (postHashtag: PostHashtag) => postHashtag.post)
+  postHashtags: PostHashtag[];
 
   @OneToOne(() => Image, (image: Image) => image.post)
   @JoinColumn()
