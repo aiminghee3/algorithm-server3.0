@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Version } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UsePipes,
+  ValidationPipe,
+  Version,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SignUpDescription } from './member-swagger.decorator';
 import { CreateMemberDto } from '../dto/create-member.dto';
@@ -8,6 +16,7 @@ import { Member } from '../entity/member.entity';
 
 @Controller('member')
 @ApiTags('member')
+@UsePipes(new ValidationPipe())
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
