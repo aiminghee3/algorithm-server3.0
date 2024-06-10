@@ -7,6 +7,7 @@ import { winstonConfigFactory } from './config/winston-config';
 import { WinstonModule } from 'nest-winston';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MemberModule } from './module/member/member.module';
+import { AuthModule } from './module/auth/auth.module';
 
 @Module({
   // 환경변수 파일 검사
@@ -30,6 +31,7 @@ import { MemberModule } from './module/member/member.module';
     // Logger 설정
     WinstonModule.forRootAsync(winstonConfigFactory),
     MemberModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
