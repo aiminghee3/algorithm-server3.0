@@ -1,5 +1,7 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import * as constants from 'node:constants';
+import { passwordCheck } from '../../../constants';
 
 export class CreateMemberDto {
   @ApiProperty({
@@ -16,6 +18,7 @@ export class CreateMemberDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Matches(passwordCheck)
   password: string;
 
   @ApiProperty({

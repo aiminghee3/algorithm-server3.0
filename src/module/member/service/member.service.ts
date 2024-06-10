@@ -15,17 +15,18 @@ export class MemberService {
   ) {}
 
   async signUp(body: CreateMemberDto): Promise<CreatedTimeResponse> {
-    if (body.password !== body.passwordCheck) {
-      throw new BadRequestException('패스워드 불일치');
-    }
-    const hashedPassword = await bcrypt.hash(
-      body.password,
-      parseInt(process.env.SALT_OR_ROUNDS, 10),
-    );
     const member = await this.memberRepository.findOneBy({ email: body.email });
     if (member) {
       throw new AlreadyExistedException(member.email);
     }
+
+    if (body.password !== body.passwordCheck) {
+      throw new BadRequestException('패스워드 불일치');
+    }
+    const hashedPassword: string = await bcrypt.hash(
+      body.password,
+      parseInt(process.env.SALT_OR_ROUNDS, 10),
+    );
 
     const saveMember: Member = this.memberRepository.create({
       email: body.email,
@@ -40,5 +41,17 @@ export class MemberService {
 
   async getAllMember(): Promise<Member[]> {
     return await this.memberRepository.find();
+  }
+
+  async findById(id: number) {
+    return await this.memberRepository.findBy({
+      id: id,
+    });
+  }
+
+  async findByEmail(email: string) {
+    return await this.memberRepository.findBy({
+      email: email,
+    });
   }
 }
