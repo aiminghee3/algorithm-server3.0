@@ -18,16 +18,22 @@ export class AuthService {
   ) {}
 
   async login(member: Member): Promise<LoginResponseDto> {
-    const accessToken: string = await this.createMemberAccessToken(member);
-    const refreshToken: string = await this.createMemberRefreshToken(member);
+      const accessToken: string = await this.createMemberAccessToken(member);
+      const refreshToken: string = await this.createMemberRefreshToken(member);
+      await this.memberRepository.update(member.id, {
+        refreshToken: refreshToken,
+      });
+      return {
+        accessToken,
+        refreshToken,
+      };
+  }
 
-    await this.memberRepository.update(member.id, {
-      refreshToken: refreshToken,
-    });
-    return {
-      accessToken,
-      refreshToken,
-    };
+  async issueNewAccessTokenByRefreshToken(member : Member) {
+      const accessToken : string = await this.createMemberAccessToken(member);
+      return {
+        accessToken
+      };
   }
 
   async createMemberAccessToken(member: Member) {
