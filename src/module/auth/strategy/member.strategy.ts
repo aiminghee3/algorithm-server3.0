@@ -16,6 +16,11 @@ export class MemberStrategy extends PassportStrategy(Strategy, 'member') {
     email: string,
     password: string,
   ): Promise<Member | UnauthorizedException> {
-    return await this.authService.validateMember(email, password);
+    const member = await this.authService.validateMember(email, password);
+    if(!member){
+      throw new UnauthorizedException();
+    }
+    return member;
   }
 }
+

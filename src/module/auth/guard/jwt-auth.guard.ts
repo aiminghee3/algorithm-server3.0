@@ -4,13 +4,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, TokenExpiredError } from "@nestjs/jwt";
 import { ConfigService } from '@nestjs/config';
-import { MemberService } from '../../member/service/member.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from '../../member/entity/member.entity';
 import { Repository } from 'typeorm';
+import { extractTokenFromHeader } from "../common/utils";
 
 @Injectable()
 export class MemberAuthGuard implements CanActivate {
@@ -23,7 +22,8 @@ export class MemberAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token: string = this.extractTokenFromHeader(request);
+    const token: string = extractTokenFromHeader(request);
+
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -33,15 +33,13 @@ export class MemberAuthGuard implements CanActivate {
       });
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      request['user'] = await this.memberRepository.findOne(payload.id);
-    } catch {
+      request['user'] = await this.memberRepository.findOne({ where: { id: payload.userId } });
+    } catch (error){
+      if(error.name === 'TokenExpiredError'){
+        throw new TokenExpiredError("Access Token Expired", error.expiredAt);
+      }
       throw new UnauthorizedException();
     }
     return true;
-  }
-
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
   }
 }
