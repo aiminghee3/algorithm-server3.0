@@ -124,6 +124,20 @@ describe('MemberController', () => {
       expect(result.length).toEqual(2);
     });
 
+    it('성공 - 회원조회', async () => {
+      //given
+      const mockMember1= {
+        id: 1,
+        email: 'test1@naver.com',
+        password: 'test1234',
+      };
+      mockMemberService.getMember.mockResolvedValue(mockMember1);
+      //when
+      const result = await memberController.getMember(1);
+
+      //then
+      expect(result).toEqual(mockMember1);
+    })
     it('실패 - 존재하지 않는 회원 조회', async () =>{
       //given
       mockMemberService.getMember.mockImplementation(() => {

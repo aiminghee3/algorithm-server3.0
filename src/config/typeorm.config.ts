@@ -12,7 +12,7 @@ export const typeORMConfig = async (
     username: configService.get<string>('MYSQL_USERNAME') || 'root',
     password: configService.get<string>('MYSQL_PASSWORD') || '00000000',
     database: configService.get<string>('MYSQL_DATABASE') || 'algorithm2',
-    entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     synchronize: configService.get<boolean>('DB_SYNCHRONIZE') || false,
     // logging: true,
   }

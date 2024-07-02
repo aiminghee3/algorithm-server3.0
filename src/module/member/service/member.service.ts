@@ -23,6 +23,7 @@ export class MemberService {
     if (body.password !== body.passwordCheck) {
       throw new BadRequestException('패스워드 불일치');
     }
+
     const hashedPassword: string = await bcrypt.hash(
       body.password,
       parseInt(process.env.SALT_OR_ROUNDS, 10),
@@ -54,10 +55,10 @@ export class MemberService {
   }
 
   async removeMember(id : number) : Promise<Member>{
-    const Member = await this.memberRepository.softRemove({id : id});
-    if(!Member){
+    const member = await this.memberRepository.findOneBy({id : id});
+    if(!member){
       throw new NotFoundException('존재하지 않는 회원입니다.');
     }
-    return Member;
+    return await this.memberRepository.softRemove(member);
   }
 }
