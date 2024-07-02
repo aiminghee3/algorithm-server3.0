@@ -1,4 +1,4 @@
-import { applyDecorators, NotFoundException } from '@nestjs/common';
+import { applyDecorators, BadRequestException, NotFoundException } from "@nestjs/common";
 import { ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 import { CreatedTimeResponse } from '../../../common/dto/created-time.dto';
@@ -14,6 +14,9 @@ export const SignUpDescription = () => {
     ApiOkResponse({
       type: CreatedTimeResponse,
     }),
-    ApiException(() => [AlreadyExistedException]),
+    ApiException(() => [
+      AlreadyExistedException,
+      BadRequestException
+    ]),
   );
 };

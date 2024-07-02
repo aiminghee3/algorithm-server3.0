@@ -1,18 +1,19 @@
 import {
   Body,
-  Controller,
-  Get,
+  Controller, Delete,
+  Get, NotFoundException, Param,
   Post,
   UsePipes,
   ValidationPipe,
-  Version,
-} from '@nestjs/common';
+  Version
+} from "@nestjs/common";
 import { ApiTags } from '@nestjs/swagger';
 import { SignUpDescription } from './member-swagger.decorator';
 import { CreateMemberDto } from '../dto/create-member.dto';
 import { MemberService } from '../service/member.service';
 import { CreatedTimeResponse } from '../../../common/dto/created-time.dto';
 import { Member } from '../entity/member.entity';
+import { AlreadyExistedException } from "../../../common/exception";
 
 @Controller('member')
 @ApiTags('member')
@@ -23,26 +24,31 @@ export class MemberController {
   @Version('3')
   @Post('/signup')
   @SignUpDescription()
-  async SignUp(@Body() body: CreateMemberDto): Promise<CreatedTimeResponse> {
+  async signUp(@Body() body: CreateMemberDto): Promise<CreatedTimeResponse> {
     return this.memberService.signUp(body);
   }
 
   @Version('3')
-  async getMember() {
-    return 'member';
+  @Get(':id')
+  async getMember(@Param() id : number) {
+    const member = this.memberService.getMember(id);
+    if(!member){
+      throw new NotFoundException('회원이 존재하지 않습니다.');
+    }
+    return member;
   }
 
   @Version('3')
   @Get('all')
-  async getAllMember(): Promise<Member[]> {
+  async getAllMember() : Promise<Member[]> {
     return this.memberService.getAllMember();
   }
 
   @Version('3')
-  async findMember() {}
-
-  @Version('3')
-  async deleteMember() {}
+  @Delete(':id')
+  async removeMember(@Param() id : number) : Promise<Member> {
+    return this.memberService.removeMember(id);
+  }
 
   @Version('3')
   async updateMember() {}
