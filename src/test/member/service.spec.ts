@@ -171,8 +171,8 @@ describe('MemberService', () =>{
           password: 'password'
         }
         //given
-        mockRepository.softRemove.mockResolvedValueOnce(deletedMember)
-
+        mockRepository.findOneBy.mockResolvedValueOnce(deletedMember);
+        mockRepository.softRemove.mockResolvedValueOnce(deletedMember);
         //when,
         const result = await memberService.removeMember(1);
 
