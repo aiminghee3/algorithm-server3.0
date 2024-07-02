@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateMemberDto } from '../dto/create-member.dto';
 import { DataSource, Repository } from 'typeorm';
 import { Member } from '../entity/member.entity';
@@ -15,7 +15,7 @@ export class MemberService {
   ) {}
 
   async signUp(body: CreateMemberDto): Promise<CreatedTimeResponse> {
-    const member = await this.memberRepository.findOneBy({ email: body.email });
+    const member : Member = await this.memberRepository.findOneBy({ email: body.email });
     if (member) {
       throw new AlreadyExistedException(member.email);
     }
@@ -40,18 +40,24 @@ export class MemberService {
   }
 
   async getAllMember(): Promise<Member[]> {
-    return await this.memberRepository.find();
+    return await this.memberRepository.find()
   }
 
-  async findById(id: number) {
-    return await this.memberRepository.findBy({
+  async getMember(id: number) : Promise<Member>{
+    const findMember = await this.memberRepository.findOneBy({
       id: id,
     });
+    if(!findMember){
+      throw new NotFoundException('존재하지 않는 회원입니다.');
+    }
+    return findMember;
   }
 
-  async findByEmail(email: string) {
-    return await this.memberRepository.findBy({
-      email: email,
-    });
+  async removeMember(id : number) : Promise<Member>{
+    const Member = await this.memberRepository.softRemove({id : id});
+    if(!Member){
+      throw new NotFoundException('존재하지 않는 회원입니다.');
+    }
+    return Member;
   }
 }
