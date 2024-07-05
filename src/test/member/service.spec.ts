@@ -59,7 +59,6 @@ describe('MemberService', () =>{
       ],
     }).compile();
     memberService = moduleRef.get<MemberService>(MemberService);
-
   });
 
   afterEach(() => {

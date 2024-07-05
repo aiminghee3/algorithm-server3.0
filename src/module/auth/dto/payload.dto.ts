@@ -1,3 +1,3 @@
 export class MemberJwtPayloadDto {
-  userId: number;
+  userId: string;
 }

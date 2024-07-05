@@ -5,6 +5,7 @@ import { CreateMemberDto } from "../dto/create-member.dto";
 import { MemberService } from "../service/member.service";
 import { CreatedTimeResponse } from "../../../common/dto/created-time.dto";
 import { Member } from "../entity/member.entity";
+import { IdParam } from "../../../common/dto/IdParam.dto";
 
 @Controller('member')
 @ApiTags('member')
@@ -27,14 +28,14 @@ export class MemberController {
 
   @Version('3')
   @Get('/:id')
-  async getMember(@Param() id : number) : Promise<Member>{
-    return this.memberService.getMember(id);
+  async getMember(@Param() memberId : IdParam) : Promise<Member>{
+    return this.memberService.getMember(memberId.id);
   }
 
   @Version('3')
   @Delete('/:id')
-  async removeMember(@Param() id : number) : Promise<Member> {
-    return this.memberService.removeMember(id);
+  async removeMember(@Param() memberId : IdParam) : Promise<Member> {
+    return this.memberService.removeMember(memberId.id);
   }
 
   @Version('3')

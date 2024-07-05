@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MemberModule } from './module/member/member.module';
 import { AuthModule } from './module/auth/auth.module';
 import { typeORMConfig } from "./config/typeorm.config";
+import { PostModule } from "./module/post/post.module";
 
 @Module({
   // 환경변수 파일 검사
@@ -26,11 +27,10 @@ import { typeORMConfig } from "./config/typeorm.config";
         await typeORMConfig(configService),
     }),
 
-
-    // Logger 설정
     WinstonModule.forRootAsync(winstonConfigFactory),
-    MemberModule,
     AuthModule,
+    MemberModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

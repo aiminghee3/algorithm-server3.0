@@ -1,19 +1,19 @@
 import { HttpException, HttpExceptionOptions } from '@nestjs/common';
 
-export class ExceptionWithMessage extends HttpException {
+export class HttpExceptionWithMessage extends HttpException {
   errorCode: string;
   constructor(
-    message: string | Record<string, any>,
+    response: string | Record<string, any>,
     status: number,
     errorCode: string,
     options?: HttpExceptionOptions,
   ) {
-    super(message, status, options);
+    super(response, status, options);
     this.errorCode = errorCode;
   }
 }
 
-export class AlreadyExistedException extends ExceptionWithMessage {
+export class AlreadyExistedException extends HttpExceptionWithMessage {
   constructor(description?: string) {
     super(`Already Existed ${description}`, 409, 'already_existed');
   }
