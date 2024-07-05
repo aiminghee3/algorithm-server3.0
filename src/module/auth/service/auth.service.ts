@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
 import { MemberJwtPayloadDto } from '../dto/payload.dto';
 import { Member } from '../../member/entity/member.entity';
@@ -69,8 +69,11 @@ export class AuthService {
     const member: Member | null = await this.memberRepository.findOneBy({
       email: email,
     });
-    if (!member || !(await this.checkPassword(password, member.password))) {
-      throw new UnauthorizedException();
+    if (!member) {
+      throw new BadRequestException('존재하지 않는 회원입니다.');
+    }
+    else if(!(await this.checkPassword(password, member.password))){
+      throw new BadRequestException('비밀번호가 일치하지 않습니다.');
     }
     return member;
   }

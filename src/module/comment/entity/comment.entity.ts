@@ -12,16 +12,16 @@ import { Post } from '../../post/entity/post.entity';
 
 @Entity()
 export class Comment {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   comment: string;
 
-  @Column()
+  @Column({default : 1})
   depth: number;
 
-  @Column('boolean', { default: true })
+  @Column('boolean', { default: false })
   deleted: boolean;
 
   @CreateDateColumn()

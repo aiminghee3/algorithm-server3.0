@@ -15,13 +15,14 @@ import { text } from 'express';
 import { Member } from '../../member/entity/member.entity';
 import { Image } from '../../image/entity/image.entity';
 import { Comment } from '../../comment/entity/comment.entity';
-import { PostHashtag } from './postHashtag.entity';
+import { PostHashTag } from './postHashTag.entity';
+import { IsOptional } from "class-validator";
 
 @Entity()
 export class Post {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @ApiProperty({ description: 'id' })
-  id: number;
+  id: string;
 
   @Column()
   @ApiProperty({
@@ -58,12 +59,13 @@ export class Post {
   })
   content: string;
 
-  @Column()
+  @Column({nullable : true})
   @ApiProperty({
     type: Date,
     example: '알림받을날짜',
   })
-  alarm: Date;
+  @IsOptional()
+  alarm?: Date;
 
   @CreateDateColumn()
   @ApiProperty({
@@ -82,13 +84,12 @@ export class Post {
   @ManyToOne(() => Member, (member: Member) => member.posts)
   member: Member;
 
-  @OneToMany(() => Comment, (comments: Comment) => comments.post)
+  @OneToMany(() => Comment, (comments: Comment) => comments.post, { cascade: true })
   comments: Comment[];
 
-  @OneToMany(() => PostHashtag, (postHashtag: PostHashtag) => postHashtag.post)
-  postHashtags: PostHashtag[];
+  @OneToMany(() => PostHashTag, (postHashtag: PostHashTag) => postHashtag.post, { cascade: true })
+  postHashtags: PostHashTag[];
 
-  @OneToOne(() => Image, (image: Image) => image.post)
-  @JoinColumn()
+  @ManyToOne(() => Image, (image: Image) => image.post)
   image: Image;
 }

@@ -44,7 +44,7 @@ export class MemberService {
     return await this.memberRepository.find()
   }
 
-  async getMember(id: number) : Promise<Member>{
+  async getMember(id: string) : Promise<Member>{
     const findMember = await this.memberRepository.findOneBy({
       id: id,
     });
@@ -54,7 +54,7 @@ export class MemberService {
     return findMember;
   }
 
-  async removeMember(id : number) : Promise<Member>{
+  async removeMember(id : string) : Promise<Member>{
     const member = await this.memberRepository.findOneBy({id : id});
     if(!member){
       throw new NotFoundException('존재하지 않는 회원입니다.');

@@ -1,10 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from '@nestjs/swagger';
 import { Post } from '../../post/entity/post.entity';
 
 @Entity()
 export class Image {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -14,6 +14,6 @@ export class Image {
   })
   image_link: string;
 
-  @OneToOne(() => Post, (post: Post) => post.image)
+  @OneToMany(() => Post, (post: Post) => post.image)
   post: Post;
 }

@@ -9,9 +9,9 @@ import { Post } from './post.entity';
 import { Tag } from './tag.entity';
 
 @Entity()
-export class PostHashtag {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class PostHashTag {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -19,9 +19,9 @@ export class PostHashtag {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Post, (post: Post) => post.postHashtags)
+  @ManyToOne(() => Post, (post: Post) => post.postHashtags, { onDelete: 'CASCADE' })
   post: Post;
 
-  @ManyToOne(() => Tag, (tag: Tag) => tag.postHashtags)
+  @ManyToOne(() => Tag, (tag: Tag) => tag.postHashtags, { onDelete: 'CASCADE' })
   tag: Tag;
 }

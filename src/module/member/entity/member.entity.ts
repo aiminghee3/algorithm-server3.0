@@ -12,8 +12,8 @@ import { IsOptional } from 'class-validator';
 
 @Entity()
 export class Member {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   email: string;
