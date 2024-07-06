@@ -11,7 +11,7 @@ import { Request } from 'express';
 import { LoginDto } from '../dto/login.dto';
 import { AuthService } from '../service/auth.service';
 import { LocalMemberGuard } from '../guard/local.guard';
-import { MemberAuthGuard } from "../guard/jwt-auth.guard";
+import { JwtAccessGuard } from "../guard/jwt-auth.guard";
 import { Member } from '../../member/entity/member.entity';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import { accessByRefreshDescription, loginDescription } from "./auth-swagger.decorator";
@@ -42,7 +42,7 @@ export class AuthController {
   }
 
   @Version('3')
-  @UseGuards(MemberAuthGuard)
+  @UseGuards(JwtAccessGuard)
   @Get('/test')
   async test(){
     console.log('test');

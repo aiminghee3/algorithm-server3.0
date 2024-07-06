@@ -1,6 +1,6 @@
 import { applyDecorators, BadRequestException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation } from "@nestjs/swagger";
-import { CreatedTimeResponse } from "../../../common/dto/created-time.dto";
+import { CreatedTimeResponse } from "../../../common/dto/time-response.dto";
 import { ApiException } from "@nanogiants/nestjs-swagger-api-exception-decorator";
 import { AlreadyExistedException } from "../../../common/exception";
 import { GetPostDetailDto } from "../dto/get-post-detail.dto";

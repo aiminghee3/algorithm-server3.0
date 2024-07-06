@@ -5,7 +5,7 @@ import { Member } from '../entity/member.entity';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlreadyExistedException } from '../../../common/exception';
-import { CreatedTimeResponse } from '../../../common/dto/created-time.dto';
+import { CreatedTimeResponse } from '../../../common/dto/time-response.dto';
 
 @Injectable()
 export class MemberService {

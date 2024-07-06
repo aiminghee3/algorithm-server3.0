@@ -24,3 +24,12 @@ export class CreateCommentDto{
   @IsString()
   comment : string;
 }
+
+export class UpdateCommentDto{
+  @ApiProperty({
+    type : String,
+    example : '댓글내용',
+  })
+  @IsString()
+  comment : string;
+}

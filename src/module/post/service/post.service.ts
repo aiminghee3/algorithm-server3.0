@@ -6,7 +6,7 @@ import { CreatePostDto } from "../dto/create-post.dto";
 import { Member } from "../../member/entity/member.entity";
 import { Tag } from "../entity/tag.entity";
 import { PostHashTag } from "../entity/postHashTag.entity";
-import { CreatedTimeResponse } from "../../../common/dto/created-time.dto";
+import { CreatedTimeResponse } from "../../../common/dto/time-response.dto";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { PaginationRequest } from "../../../common/dto/pagination.dto";
 import { GetAllPostDto, GetAllPostQuery, GetPostDto } from "../dto/get-all-post.dto";
