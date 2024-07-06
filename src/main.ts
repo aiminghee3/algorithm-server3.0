@@ -11,7 +11,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
   const port = configService.get('PORT') || 8000;
 
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:3000',
+  });
   app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
