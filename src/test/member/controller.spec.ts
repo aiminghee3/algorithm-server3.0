@@ -2,7 +2,7 @@ import { MemberService } from "../../module/member/service/member.service";
 import { MemberController } from "../../module/member/controller/member.controller";
 import { Test } from "@nestjs/testing";
 import { CreateMemberDto } from "../../module/member/dto/create-member.dto";
-import { CreatedTimeResponse } from "../../common/dto/created-time.dto";
+import { CreatedTimeResponse } from "../../common/dto/time-response.dto";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { AlreadyExistedException } from "../../common/exception";
 import { Member } from "../../module/member/entity/member.entity";

@@ -6,7 +6,7 @@ import { CreatePostDto } from "../dto/create-post.dto";
 import { Member } from "../../member/entity/member.entity";
 import { Tag } from "../entity/tag.entity";
 import { PostHashTag } from "../entity/postHashTag.entity";
-import { CreatedTimeResponse } from "../../../common/dto/created-time.dto";
+import { CreatedTimeResponse } from "../../../common/dto/time-response.dto";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { PaginationRequest } from "../../../common/dto/pagination.dto";
 import { GetAllPostDto, GetAllPostQuery, GetPostDto } from "../dto/get-all-post.dto";
@@ -49,10 +49,17 @@ export class PostService{
   }
 
   async getPost(postId : string) : Promise<GetPostDetailDto>{
-    const post = await this.postRepository.findOne({
-      where: { id: postId },
-      relations: ['postHashtags.tag', 'comments.children']
-    });
+    const post = await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.postHashtags', 'postHashtags')
+      .leftJoinAndSelect('postHashtags.tag', 'tag')
+      .leftJoinAndSelect('post.comments', 'comments')
+      .leftJoinAndSelect('comments.children', 'children')
+      .where('post.id = :postId', { postId })
+      .orderBy('comments.createdAt', 'ASC')  // 부모 댓글 작성일 순 정렬
+      .addOrderBy('children.createdAt', 'ASC')  // 자식 댓글 작성일 순 정렬
+      .getOne();
+
     if(!post){
       throw new NotFoundException('존재하지 않는 게시글입니다.');
     }

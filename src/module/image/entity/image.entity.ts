@@ -4,6 +4,7 @@ import { Post } from '../../post/entity/post.entity';
 
 @Entity()
 export class Image {
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

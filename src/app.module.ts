@@ -10,6 +10,7 @@ import { MemberModule } from './module/member/member.module';
 import { AuthModule } from './module/auth/auth.module';
 import { typeORMConfig } from "./config/typeorm.config";
 import { PostModule } from "./module/post/post.module";
+import { CommentModule } from "./module/comment/comment.module";
 
 @Module({
   // 환경변수 파일 검사
@@ -31,6 +32,7 @@ import { PostModule } from "./module/post/post.module";
     AuthModule,
     MemberModule,
     PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

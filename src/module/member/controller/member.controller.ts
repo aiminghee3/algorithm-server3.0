@@ -3,7 +3,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { SignUpDescription } from "./member-swagger.decorator";
 import { CreateMemberDto } from "../dto/create-member.dto";
 import { MemberService } from "../service/member.service";
-import { CreatedTimeResponse } from "../../../common/dto/created-time.dto";
+import { CreatedTimeResponse } from "../../../common/dto/time-response.dto";
 import { Member } from "../entity/member.entity";
 import { IdParam } from "../../../common/dto/IdParam.dto";
 

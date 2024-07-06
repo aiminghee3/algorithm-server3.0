@@ -13,12 +13,12 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { PostService } from "../service/post.service";
-import { CreatedTimeResponse } from "../../../common/dto/created-time.dto";
+import { CreatedTimeResponse } from "../../../common/dto/time-response.dto";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { IdParam } from "../../../common/dto/IdParam.dto";
 import { DeleteQuery } from "../../../common/dto/deleteQuery.dto";
 import { JwtVerifyAuthGuard } from "../../../common/decorators";
-import { IsPostOwnerGuard } from "../decorators/postDecorator";
+import { IsPostOwnerGuard } from "../decorators/post.decorator";
 import { GetAllPostDto, GetAllPostQuery } from "../dto/get-all-post.dto";
 import { GetPostDetailDto } from "../dto/get-post-detail.dto";
 import {

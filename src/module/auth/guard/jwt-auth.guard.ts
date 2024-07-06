@@ -13,7 +13,7 @@ import { extractTokenFromHeader } from "../common/utils";
 import { InvalidTokenException, TokenExpiredException } from "../exception/auth.exception";
 
 @Injectable()
-export class MemberAuthGuard implements CanActivate {
+export class JwtAccessGuard implements CanActivate {
   constructor(
     @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,

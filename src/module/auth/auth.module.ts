@@ -7,7 +7,9 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from '../member/entity/member.entity';
 import { MemberStrategy } from './strategy/member.strategy';
-import { MemberAuthGuard } from "./guard/jwt-auth.guard";
+import { JwtAccessGuard } from "./guard/jwt-auth.guard";
+
+;
 
 @Module({
   imports: [TypeOrmModule.forFeature([Member]), JwtModule, ConfigModule],
@@ -17,7 +19,7 @@ import { MemberAuthGuard } from "./guard/jwt-auth.guard";
     AuthService,
     MemberStrategy,
     JwtService,
-    MemberAuthGuard
+    JwtAccessGuard
   ],
   controllers: [AuthController],
 })
