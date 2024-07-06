@@ -5,6 +5,7 @@ import { JwtVerifyAuthGuard } from "../../../common/decorators";
 import { CreateCommentDto, UpdateCommentDto } from "../dto/create-comment.dto";
 import { IsCommentOwnerGuard } from "../decorators/comment.decorator";
 import { IdParam } from "../../../common/dto/IdParam.dto";
+import { CreateCommentSwagger, DeleteCommentSwagger, UpdateCommentSwagger } from "./comment-swagger.decorator";
 
 @Controller('comment')
 @ApiTags('comment')
@@ -15,6 +16,7 @@ export class CommentController{
 
   @Version('3')
   @JwtVerifyAuthGuard()
+  @CreateCommentSwagger()
   @Post()
   async createComment(@Req() req, @Body() body : CreateCommentDto){
     return await this.commentService.createComment(req.user, body);
@@ -23,6 +25,7 @@ export class CommentController{
 
   @Version('3')
   @IsCommentOwnerGuard()
+  @UpdateCommentSwagger()
   @Put(':id')
   async updateComment(@Param() commentId : IdParam, @Body() updateCommentDto : UpdateCommentDto){
     return await this.commentService.updateComment(commentId.id, updateCommentDto)
@@ -30,6 +33,7 @@ export class CommentController{
 
   @Version('3')
   @IsCommentOwnerGuard()
+  @DeleteCommentSwagger()
   @Delete(':id')
   async deleteComment(@Param() commentId : IdParam){
     return await this.commentService.deleteComment(commentId.id);

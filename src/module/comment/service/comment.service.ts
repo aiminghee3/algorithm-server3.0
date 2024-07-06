@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -26,7 +26,7 @@ export class CommentService{
 
     const post: Post = await this.postRepository.findOne({where : {id : createComment.postId}});
     if(!post){
-      throw new BadRequestException('존재하지 않는 게시글입니다.');
+      throw new NotFoundException('존재하지 않는 게시글입니다.');
     }
     const parentComment : Comment = await this.commentRepository.findOne({where : {id : createComment.parentId}});
 
@@ -42,7 +42,7 @@ export class CommentService{
     const comment = await this.commentRepository.findOne({where : {id : commentId}, relations: ['member', 'post']});
 
     if(!comment){
-      throw new BadRequestException('존재하지 않는 댓글입니다.');
+      throw new NotFoundException('존재하지 않는 댓글입니다.');
     }
 
     const updateComment = {
@@ -57,7 +57,7 @@ export class CommentService{
   async deleteComment(commandId : string) : Promise<DeletedTimeResponse>{
       const comment = await this.commentRepository.findOne({where : {id : commandId}});
       if(!comment){
-        throw new BadRequestException('존재하지 않는 댓글입니다.');
+        throw new NotFoundException('존재하지 않는 댓글입니다.');
       }
       comment.deleted = true;
       await this.commentRepository.save(comment);
