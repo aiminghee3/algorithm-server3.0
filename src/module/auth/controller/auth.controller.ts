@@ -41,10 +41,11 @@ export class AuthController {
       return await this.authService.issueNewAccessTokenByRefreshToken(<Member>request.user);
   }
 
+
   @Version('3')
+  @Get('/access')
   @UseGuards(JwtAccessGuard)
-  @Get('/test')
-  async test(){
-    console.log('test');
+  async verifyAccessToken(@Req() request: Request){
+    return request.user;
   }
 }

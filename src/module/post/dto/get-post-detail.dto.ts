@@ -55,6 +55,19 @@ export class GetPostDetailDto{
   @IsString()
   id : string;
 
+
+  @ApiProperty({
+    type : String,
+    example : '작성자',
+  })
+  memberId : string;
+
+  @ApiProperty({
+    type : String,
+    example : '작성자 이메일',
+  })
+  email : string;
+
   @ApiProperty({
     type : String,
     example : '제목',
@@ -77,11 +90,11 @@ export class GetPostDetailDto{
   problem_link : string;
 
   @ApiProperty({
-    type : Number,
-    example : '난이도',
+    type : String,
+    example : '난이도이미지',
   })
   @IsNumber()
-  rate : number;
+  image_link : string;
 
   @ApiProperty({
     type : Date,

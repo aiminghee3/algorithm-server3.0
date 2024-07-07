@@ -43,7 +43,7 @@ export class AuthService {
 
     return await this.jwtService.signAsync(payload, {
       secret: this.configService.get('JWT_ACCESS_TOKEN_MEMBER_SECRET_KEY'),
-      expiresIn: this.configService.get('JWT_ACCESS_TOKEN_EXPIRES_TIME'),
+      expiresIn: `${this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRES_TIME')}s`
     });
   }
 
@@ -54,7 +54,7 @@ export class AuthService {
 
     return await this.jwtService.signAsync(payload, {
       secret: this.configService.get('JWT_REFRESH_TOKEN_MEMBER_SECRET_KEY'),
-      expiresIn: this.configService.get('JWT_REFRESH_TOKEN_EXPIRES_TIME'),
+      expiresIn: `${this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRES_TIME')}s`,
     });
   }
 

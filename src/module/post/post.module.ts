@@ -7,10 +7,11 @@ import { PostService } from "./service/post.service";
 import { PostHashTag } from "./entity/postHashTag.entity";
 import { Tag } from "./entity/tag.entity";
 import { Member } from "../member/entity/member.entity";
+import { Image } from "../image/entity/image.entity";
 import { JwtModule } from "@nestjs/jwt";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, PostHashTag, Tag, Member]), JwtModule],
+  imports: [TypeOrmModule.forFeature([Post, PostHashTag, Tag, Member, Image]), JwtModule],
   providers: [ConfigService, PostService],
   controllers: [PostController],
 })

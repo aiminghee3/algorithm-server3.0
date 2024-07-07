@@ -60,7 +60,7 @@ export class GetPostDto{
     type : Array,
     example : ['tag1','tag2'],
   })
-  tag : string[];
+  tags : string[];
 }
 export class GetAllPostDto extends PaginationResponse{
   @ApiProperty({
