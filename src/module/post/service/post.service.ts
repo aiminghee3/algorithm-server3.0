@@ -10,7 +10,7 @@ import { CreatedTimeResponse } from "../../../common/dto/time-response.dto";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { PaginationRequest } from "../../../common/dto/pagination.dto";
 import { GetAllPostDto, GetAllPostQuery, GetPostDto } from "../dto/get-all-post.dto";
-import { commentDto, GetPostDetailDto, hashtagDto } from "../dto/get-post-detail.dto";
+import { GetPostDetailDto, hashtagDto } from "../dto/get-post-detail.dto";
 import { plainToClass } from "class-transformer";
 import { Image } from "../../image/entity/image.entity";
 
@@ -71,6 +71,7 @@ export class PostService{
     if(!post){
       throw new NotFoundException('존재하지 않는 게시글입니다.');
     }
+
     return plainToClass(GetPostDetailDto, {
       id: post.id,
       memberId : post.member.id,
@@ -79,6 +80,7 @@ export class PostService{
       problem_number: post.problem_number,
       problem_link: post.problem_link,
       image : post.image.image_link,
+      rate : post.rate,
       content: post.content,
       alarm: post.alarm,
       createdAt: post.createdAt,
@@ -86,23 +88,6 @@ export class PostService{
       hashtag: post.postHashtags.map(hashtag => plainToClass(hashtagDto, {
         name: hashtag.tag.name,
       })),
-      comments: post.comments
-        .filter(comment => comment.depth === 1)
-        .map(comment => plainToClass(commentDto, {
-          id: comment.id,
-          comment: comment.comment,
-          depth: comment.depth,
-          deleted: comment.deleted,
-          createdAt: comment.createdAt,
-          children: comment.children
-            .map(child => plainToClass(commentDto, {
-              id: child.id,
-              comment: child.comment,
-              depth: child.depth,
-              deleted: child.deleted,
-              createdAt: child.createdAt,
-            })),
-        })),
     });
   }
 
@@ -140,6 +125,7 @@ export class PostService{
     try {
       await this.postRepository.manager.transaction(async (transaction: EntityManager) => {
         const post = await transaction.findOne(Post, { where: { id: postId }, relations: ['postHashtags'] });
+        const image = await this.imageRepository.findOneBy({id : updatePostDto.rate.toString()})
         if (!post) {
           throw new NotFoundException('존재하지 않는 게시글입니다.');
         }
@@ -148,7 +134,7 @@ export class PostService{
           ...post,
           ...updatePostDto
         }
-
+        updatePost.image = image;
         await transaction.delete(PostHashTag, { post: { id: postId } });
 
         for (const tagId of updatePostDto.tags) {

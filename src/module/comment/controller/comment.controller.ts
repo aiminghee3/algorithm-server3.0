@@ -1,11 +1,24 @@
-import { Body, Controller, Delete, Param, Post, Put, Req, UsePipes, ValidationPipe, Version } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put, Query,
+  Req,
+  UsePipes,
+  ValidationPipe,
+  Version
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { CommentService } from "../service/comment.service";
 import { JwtVerifyAuthGuard } from "../../../common/decorators";
-import { CreateCommentDto, UpdateCommentDto } from "../dto/create-comment.dto";
+import { commentDto, CreateCommentDto, UpdateCommentDto } from "../dto/create-comment.dto";
 import { IsCommentOwnerGuard } from "../decorators/comment.decorator";
 import { IdParam } from "../../../common/dto/IdParam.dto";
 import { CreateCommentSwagger, DeleteCommentSwagger, UpdateCommentSwagger } from "./comment-swagger.decorator";
+import { DeleteQuery } from "../../../common/dto/deleteQuery.dto";
 
 @Controller('comment')
 @ApiTags('comment')
@@ -22,6 +35,11 @@ export class CommentController{
     return await this.commentService.createComment(req.user, body);
   }
 
+  @Version('3')
+  @Get(':id')
+  async getCommentList(@Param() postId : IdParam) : Promise<commentDto>{
+    return await this.commentService.getComment(postId.id);
+  }
 
   @Version('3')
   @IsCommentOwnerGuard()
@@ -34,8 +52,8 @@ export class CommentController{
   @Version('3')
   @IsCommentOwnerGuard()
   @DeleteCommentSwagger()
-  @Delete(':id')
-  async deleteComment(@Param() commentId : IdParam){
-    return await this.commentService.deleteComment(commentId.id);
+  @Delete('')
+  async deleteComment(@Query() query: DeleteQuery){
+    return await this.commentService.deleteComment(query.ids);
   }
 }

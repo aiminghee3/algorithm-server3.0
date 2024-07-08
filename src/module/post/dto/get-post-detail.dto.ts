@@ -10,43 +10,6 @@ export class hashtagDto{
   name : string;
 }
 
-export class commentDto{
-  @ApiProperty({
-    type : String,
-    example : 'id',
-  })
-  @IsString()
-  id : string;
-
-  @ApiProperty({
-    type : String,
-    example : '댓글',
-  })
-  @IsString()
-  comment : string;
-
-  @ApiProperty({
-    type : Number,
-    example : '댓글 깊이',
-  })
-  @IsNumber()
-  depth : number;
-
-  @ApiProperty({
-    type : Boolean,
-    example : '삭제유무',
-  })
-  @IsBoolean()
-  deleted : boolean;
-
-  @ApiProperty({
-    type : String,
-    example : '작성일',
-  })
-  @IsDate()
-  createdAt: Date;
-}
-
 export class GetPostDetailDto{
   @ApiProperty({
     type : String,
@@ -90,6 +53,12 @@ export class GetPostDetailDto{
   problem_link : string;
 
   @ApiProperty({
+    type : Number,
+    example : '난이도',
+  })
+  rate : number;
+
+  @ApiProperty({
     type : String,
     example : '난이도이미지',
   })
@@ -122,10 +91,4 @@ export class GetPostDetailDto{
     isArray : true,
   })
   hashtag : hashtagDto[];
-
-  @ApiProperty({
-    type : commentDto,
-    isArray : true,
-  })
-  comments: commentDto[];
 }
