@@ -52,7 +52,7 @@ export class CreatePostDto{
 
   @ApiProperty({
     type : Array,
-    example : [1,2],
+    example : ['1','2'],
   })
   @IsOptional()
   tags? : string[];

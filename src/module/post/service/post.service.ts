@@ -10,8 +10,9 @@ import { CreatedTimeResponse } from "../../../common/dto/time-response.dto";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { PaginationRequest } from "../../../common/dto/pagination.dto";
 import { GetAllPostDto, GetAllPostQuery, GetPostDto } from "../dto/get-all-post.dto";
-import { commentDto, GetPostDetailDto, hashtagDto } from "../dto/get-post-detail.dto";
+import { GetPostDetailDto, hashtagDto } from "../dto/get-post-detail.dto";
 import { plainToClass } from "class-transformer";
+import { Image } from "../../image/entity/image.entity";
 
 @Injectable()
 export class PostService{
@@ -26,6 +27,8 @@ export class PostService{
     private readonly hashTagRepository : Repository<Tag>,
     @InjectRepository(PostHashTag)
     private readonly postHashTagRepository : Repository<PostHashTag>,
+    @InjectRepository(Image)
+    private readonly imageRepository : Repository<Image>,
   ) {}
 
   async createPost(memberId : string, post : CreatePostDto) : Promise<CreatedTimeResponse>{
@@ -33,8 +36,11 @@ export class PostService{
     if(!member){
       throw new NotFoundException('존재하지 않는 회원입니다.');
     }
+    const image = await this.imageRepository.findOneBy({id : post.rate.toString()})
     const createdPost: Post = this.postRepository.create(post);
     createdPost.member = member;
+    createdPost.image = image;
+
     const savedPost = await this.postRepository.save(createdPost);
 
     for (const tagId  of post.tags){
@@ -52,6 +58,8 @@ export class PostService{
     const post = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.postHashtags', 'postHashtags')
+      .leftJoinAndSelect('post.member', 'member')
+      .leftJoinAndSelect('post.image', 'image')
       .leftJoinAndSelect('postHashtags.tag', 'tag')
       .leftJoinAndSelect('post.comments', 'comments')
       .leftJoinAndSelect('comments.children', 'children')
@@ -66,10 +74,13 @@ export class PostService{
 
     return plainToClass(GetPostDetailDto, {
       id: post.id,
+      memberId : post.member.id,
+      email : post.member.email,
       title: post.title,
       problem_number: post.problem_number,
       problem_link: post.problem_link,
-      rate: post.rate,
+      image : post.image.image_link,
+      rate : post.rate,
       content: post.content,
       alarm: post.alarm,
       createdAt: post.createdAt,
@@ -77,23 +88,6 @@ export class PostService{
       hashtag: post.postHashtags.map(hashtag => plainToClass(hashtagDto, {
         name: hashtag.tag.name,
       })),
-      comments: post.comments
-        .filter(comment => comment.depth === 1)
-        .map(comment => plainToClass(commentDto, {
-          id: comment.id,
-          comment: comment.comment,
-          depth: comment.depth,
-          deleted: comment.deleted,
-          createdAt: comment.createdAt,
-          children: comment.children
-            .map(child => plainToClass(commentDto, {
-              id: child.id,
-              comment: child.comment,
-              depth: child.depth,
-              deleted: child.deleted,
-              createdAt: child.createdAt,
-            })),
-        })),
     });
   }
 
@@ -113,7 +107,7 @@ export class PostService{
         title : p.title,
         problem_number : p.problem_number,
         image : p.image.image_link,
-        tag : p.postHashtags.map((postHashTag) => postHashTag.tag.name),
+        tags : p.postHashtags.map((postHashTag) => postHashTag.tag.name),
         createdAt : p.createdAt,
         updatedAt : p.updatedAt
       })
@@ -131,6 +125,7 @@ export class PostService{
     try {
       await this.postRepository.manager.transaction(async (transaction: EntityManager) => {
         const post = await transaction.findOne(Post, { where: { id: postId }, relations: ['postHashtags'] });
+        const image = await this.imageRepository.findOneBy({id : updatePostDto.rate.toString()})
         if (!post) {
           throw new NotFoundException('존재하지 않는 게시글입니다.');
         }
@@ -139,7 +134,7 @@ export class PostService{
           ...post,
           ...updatePostDto
         }
-
+        updatePost.image = image;
         await transaction.delete(PostHashTag, { post: { id: postId } });
 
         for (const tagId of updatePostDto.tags) {
