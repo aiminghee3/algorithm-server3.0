@@ -91,7 +91,22 @@ export class PostService{
     });
   }
 
-  async getAllPost(query : PaginationRequest) : Promise<GetAllPostDto>{
+  async getOwnerPost(memberId : string, query : PaginationRequest){
+    const [posts , total] = await this.postRepository.findAndCount({
+      where: {
+        ...this.updateToSearchQuery(query),
+        member: { id: memberId }
+      },
+      relations: ['postHashtags.tag', 'image', 'member'],
+      take : query.take + 1,
+      skip : (query.page - 1) * query.take
+    });
+
+    return this.generateReturnPostList(posts, total, query);
+  }
+
+
+  async getAllPost(query : GetAllPostQuery) : Promise<GetAllPostDto>{
     const [posts, total] = await this.postRepository.findAndCount({
         where : {...this.updateToSearchQuery(query)},
         relations: ['postHashtags.tag', 'image'],
@@ -99,26 +114,7 @@ export class PostService{
         skip : (query.page - 1) * query.take
       });
 
-    const result: Array<GetPostDto> = [];
-
-    for (const p of posts){
-      result.push({
-        id : p.id,
-        title : p.title,
-        problem_number : p.problem_number,
-        image : p.image.image_link,
-        tags : p.postHashtags.map((postHashTag) => postHashTag.tag.name),
-        createdAt : p.createdAt,
-        updatedAt : p.updatedAt
-      })
-    }
-
-    return {
-      posts : result,
-      total : total,
-      totalPages: Math.ceil(total / (query.take + 1)),
-      currentPage : query.page
-    }
+    return this.generateReturnPostList(posts, total, query);
   }
 
   async updatePost(postId : string, updatePostDto : CreatePostDto) : Promise<CreatedTimeResponse>{
@@ -173,6 +169,31 @@ export class PostService{
       throw new InternalServerErrorException();
     }
   }
+
+  private generateReturnPostList(posts : Post[], total : number, query : GetAllPostQuery){
+
+    const result: Array<GetPostDto> = [];
+
+    for (const p of posts){
+      result.push({
+        id : p.id,
+        title : p.title,
+        problem_number : p.problem_number,
+        image : p.image.image_link,
+        tags : p.postHashtags.map((postHashTag) => postHashTag.tag.name),
+        createdAt : p.createdAt,
+        updatedAt : p.updatedAt
+      })
+    }
+
+    return {
+      posts : result,
+      total : total,
+      totalPages: Math.ceil(total / (query.take + 1)),
+      currentPage : query.page
+    }
+  }
+
 
   private updateToSearchQuery(query : GetAllPostQuery){
     let search = {};

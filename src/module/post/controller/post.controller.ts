@@ -53,6 +53,13 @@ export class PostController{
   }
 
   @Version('3')
+  @Get('/mypage')
+  @JwtVerifyAuthGuard()
+  async getOwnerPost(@Req() req, @Query() query : GetAllPostQuery) : Promise<GetAllPostDto>{
+    return this.postService.getOwnerPost(req.user.id, query);
+  }
+
+  @Version('3')
   @Get(':id')
   @getPostSwagger()
   async getPost(@Param() postId : IdParam) : Promise<GetPostDetailDto>{
