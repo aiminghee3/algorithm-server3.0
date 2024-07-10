@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { swaggerConfig } from './config/swagger-config';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config'
 
@@ -12,7 +12,7 @@ async function bootstrap() {
   const port = configService.get('PORT') || 8000;
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000','https://www.codereview.site']
   });
   app.setGlobalPrefix('api');
   app.enableVersioning({

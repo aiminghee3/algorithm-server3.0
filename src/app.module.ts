@@ -11,6 +11,7 @@ import { AuthModule } from './module/auth/auth.module';
 import { typeORMConfig } from "./config/typeorm.config";
 import { PostModule } from "./module/post/post.module";
 import { CommentModule } from "./module/comment/comment.module";
+import { FcmModule } from "./module/fcm/fcm.module";
 
 @Module({
   // 환경변수 파일 검사
@@ -30,6 +31,7 @@ import { CommentModule } from "./module/comment/comment.module";
 
     WinstonModule.forRootAsync(winstonConfigFactory),
     AuthModule,
+    FcmModule,
     MemberModule,
     PostModule,
     CommentModule,

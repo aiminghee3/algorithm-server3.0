@@ -13,6 +13,7 @@ import { GetAllPostDto, GetAllPostQuery, GetPostDto } from "../dto/get-all-post.
 import { GetPostDetailDto, hashtagDto } from "../dto/get-post-detail.dto";
 import { plainToClass } from "class-transformer";
 import { Image } from "../../image/entity/image.entity";
+import { FcmService } from "../../fcm/fcm.service";
 
 @Injectable()
 export class PostService{
@@ -29,6 +30,8 @@ export class PostService{
     private readonly postHashTagRepository : Repository<PostHashTag>,
     @InjectRepository(Image)
     private readonly imageRepository : Repository<Image>,
+
+    private readonly fcmService : FcmService,
   ) {}
 
   async createPost(memberId : string, post : CreatePostDto) : Promise<CreatedTimeResponse>{
@@ -50,6 +53,7 @@ export class PostService{
         tag : hashTag,
       });
       await this.postHashTagRepository.save(postHashTag);
+      await this.fcmService.scheduleNotification(member.fcmToken, post.title, post.alarm);
     }
     return {created : new Date()};
   }
@@ -120,7 +124,7 @@ export class PostService{
   async updatePost(postId : string, updatePostDto : CreatePostDto) : Promise<CreatedTimeResponse>{
     try {
       await this.postRepository.manager.transaction(async (transaction: EntityManager) => {
-        const post = await transaction.findOne(Post, { where: { id: postId }, relations: ['postHashtags'] });
+        const post = await transaction.findOne(Post, { where: { id: postId }, relations: ['postHashtags', 'member'] });
         const image = await this.imageRepository.findOneBy({id : updatePostDto.rate.toString()})
         if (!post) {
           throw new NotFoundException('존재하지 않는 게시글입니다.');
@@ -141,6 +145,7 @@ export class PostService{
           });
           updatePost.postHashtags.push(postHashTag);
         }
+        await this.fcmService.scheduleNotification(post.member.fcmToken, post.title, post.alarm);
         await transaction.save(Post, updatePost);
       });
       return { created: new Date() };

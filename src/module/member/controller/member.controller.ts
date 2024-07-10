@@ -7,6 +7,10 @@ import { CreatedTimeResponse } from "../../../common/dto/time-response.dto";
 import { Member } from "../entity/member.entity";
 import { IdParam } from "../../../common/dto/IdParam.dto";
 
+import * as admin from 'firebase-admin';
+
+import { ServiceAccount } from 'firebase-admin';
+
 @Controller('member')
 @ApiTags('member')
 @UsePipes(new ValidationPipe())

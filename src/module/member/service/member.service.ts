@@ -32,6 +32,7 @@ export class MemberService {
     const saveMember: Member = this.memberRepository.create({
       email: body.email,
       password: hashedPassword,
+      fcmToken : body.fcmToken,
     });
     await this.memberRepository.save(saveMember);
 
