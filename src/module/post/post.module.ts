@@ -9,10 +9,11 @@ import { Tag } from "./entity/tag.entity";
 import { Member } from "../member/entity/member.entity";
 import { Image } from "../image/entity/image.entity";
 import { JwtModule } from "@nestjs/jwt";
+import { FcmService } from "../fcm/fcm.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, PostHashTag, Tag, Member, Image]), JwtModule],
-  providers: [ConfigService, PostService],
+  providers: [ConfigService, PostService, FcmService],
   controllers: [PostController],
 })
 export class PostModule {}

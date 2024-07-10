@@ -29,4 +29,13 @@ export class CreateMemberDto {
   @IsNotEmpty()
   @Matches(passwordRegExp)
   passwordCheck: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'Fcm token',
+  })
+  @IsString()
+  @IsNotEmpty()
+  fcmToken: string;
+
 }

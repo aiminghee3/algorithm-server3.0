@@ -33,15 +33,15 @@ export class Comment {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => Member, (member: Member) => member.comments)
+  @ManyToOne(() => Member, (member: Member) => member.comments, { onDelete: 'CASCADE' })
   member: Member;
 
-  @ManyToOne(() => Post, (post: Post) => post.comments)
+  @ManyToOne(() => Post, (post: Post) => post.comments, { onDelete: 'CASCADE' })
   post: Post;
 
-  @ManyToOne(() => Comment, (comment: Comment) => comment.children)
+  @ManyToOne(() => Comment, (comment: Comment) => comment.children, { onDelete: 'CASCADE' })
   parent: Comment;
 
-  @OneToMany(() => Comment, (comment: Comment) => comment.parent)
+  @OneToMany(() => Comment, (comment: Comment) => comment.parent, { cascade: true })
   children: Comment[];
 }

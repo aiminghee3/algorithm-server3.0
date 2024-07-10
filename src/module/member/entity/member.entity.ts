@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { Post } from '../../post/entity/post.entity';
 import { Comment } from '../../comment/entity/comment.entity';
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsString } from "class-validator";
 
 @Entity()
 export class Member {
@@ -24,6 +24,10 @@ export class Member {
   @Column({nullable : true})
   @IsOptional()
   refreshToken?: string;
+
+  @Column()
+  @IsString()
+  fcmToken? : string;
 
   @CreateDateColumn()
   createdAt: Date;
