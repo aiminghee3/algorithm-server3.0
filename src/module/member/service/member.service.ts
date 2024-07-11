@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { CreateMemberDto } from '../dto/create-member.dto';
 import { DataSource, Repository } from 'typeorm';
 import { Member } from '../entity/member.entity';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlreadyExistedException } from '../../../common/exception';
 import { CreatedTimeResponse } from '../../../common/dto/time-response.dto';

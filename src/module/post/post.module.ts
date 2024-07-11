@@ -13,7 +13,7 @@ import { FcmService } from "../fcm/fcm.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, PostHashTag, Tag, Member, Image]), JwtModule],
-  providers: [ConfigService, PostService, FcmService],
+  providers: [PostService, FcmService],
   controllers: [PostController],
 })
 export class PostModule {}

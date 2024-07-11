@@ -8,7 +8,7 @@ import { FcmService } from "../fcm/fcm.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Member])],
-  providers: [ConfigService, MemberService],
+  providers: [MemberService],
   controllers: [MemberController],
 })
 export class MemberModule {}

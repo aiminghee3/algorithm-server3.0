@@ -3,24 +3,27 @@ import * as firebaseConfig from './fcm.json';
 import * as admin from 'firebase-admin';
 import * as cron from 'node-cron';
 import { v4 as uuidv4 } from 'uuid';
+import { ConfigService } from "@nestjs/config";
 
-const firebase_params = {
-  type: firebaseConfig.type,
-  projectId: firebaseConfig.project_id,
-  privateKeyId: firebaseConfig.private_key_id,
-  privateKey: firebaseConfig.private_key,
-  clientEmail: firebaseConfig.client_email,
-  clientId: firebaseConfig.client_id,
-  authUri: firebaseConfig.auth_uri,
-  tokenUri: firebaseConfig.token_uri,
-  authProviderX509CertUrl: firebaseConfig.auth_provider_x509_cert_url,
-  clientC509CertUrl: firebaseConfig.client_x509_cert_url,
-};
 const jobs = {};
 
 @Injectable()
 export class FcmService {
-  constructor() {
+  constructor(
+    private readonly configService: ConfigService,
+  ) {
+    const firebase_params = {
+      type: this.configService.get<string>('FIREBASE_TYPE'),
+      projectId: this.configService.get<string>('FIREBASE_PROJECT_ID'),
+      privateKeyId: this.configService.get<string>('FIREBASE_PRIVATE_KEY_ID'),
+      privateKey: this.configService.get<string>('FIREBASE_PRIVATE_KEY').replace(/\\n/g, '\n'),
+      clientEmail: this.configService.get<string>('FIREBASE_CLIENT_EMAIL'),
+      clientId: this.configService.get<string>('FIREBASE_CLIENT_ID'),
+      authUri: this.configService.get<string>('FIREBASE_AUTH_URI'),
+      tokenUri: this.configService.get<string>('FIREBASE_TOKEN_URI'),
+      authProviderX509CertUrl: this.configService.get<string>('FIREBASE_AUTH_PROVIDER_X509_CERT_URL'),
+      clientC509CertUrl: this.configService.get<string>('FIREBASE_CLIENT_X509_CERT_URL'),
+    };
     if (!admin.apps.length) {
       admin.initializeApp({
         credential: admin.credential.cert(firebase_params),

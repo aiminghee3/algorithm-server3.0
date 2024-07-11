@@ -5,7 +5,7 @@ import { Member } from '../../member/entity/member.entity';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import { LoginResponseDto } from '../dto/login-response.dto';
 
 @Injectable()
