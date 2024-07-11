@@ -6,12 +6,13 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { PostHashtag } from './postHashtag.entity';
+import { PostHashTag } from "./postHashTag.entity";
+
 
 @Entity()
 export class Tag {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -22,6 +23,6 @@ export class Tag {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => PostHashtag, (postHashtag: PostHashtag) => postHashtag.tag)
-  postHashtags: PostHashtag[];
+  @OneToMany(() => PostHashTag, (postHashtag: PostHashTag) => postHashtag.tag, { cascade: true })
+  postHashtags: PostHashTag[];
 }

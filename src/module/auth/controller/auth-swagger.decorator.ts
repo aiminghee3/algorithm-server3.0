@@ -1,6 +1,6 @@
 import { applyDecorators, NotFoundException } from '@nestjs/common';
 import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
-import { CreatedTimeResponse } from '../../../common/dto/created-time.dto';
+import { CreatedTimeResponse } from '../../../common/dto/time-response.dto';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import { IssueAccessTokenByRefreshTokenDto } from "../dto/access-issue.dto";

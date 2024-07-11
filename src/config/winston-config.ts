@@ -1,6 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as winston from 'winston';
-import * as WinstonDaily from 'winston-daily-rotate-file';
+import WinstonDaily from "winston-daily-rotate-file";
 import {
   WinstonModuleAsyncOptions,
   utilities as nestWinstonModuleUtilities,

@@ -1,13 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { envValidationSchema } from './config/env-validation.config';
 import { winstonConfigFactory } from './config/winston-config';
 import { WinstonModule } from 'nest-winston';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MemberModule } from './module/member/member.module';
 import { AuthModule } from './module/auth/auth.module';
+import { typeORMConfig } from "./config/typeorm.config";
+import { PostModule } from "./module/post/post.module";
+import { CommentModule } from "./module/comment/comment.module";
+import { FcmModule } from "./module/fcm/fcm.module";
 
 @Module({
   // 환경변수 파일 검사
@@ -15,23 +19,22 @@ import { AuthModule } from './module/auth/auth.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'prod' ? '.env.prod' : '.env',
+      load : [],
+      cache : true,
       validationSchema: envValidationSchema,
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.MYSQL_HOST,
-      port: parseInt(process.env.MYSQL_PORT),
-      username: process.env.MYSQL_USERNAME,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DATABASE,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) =>
+        await typeORMConfig(configService),
     }),
 
-    // Logger 설정
     WinstonModule.forRootAsync(winstonConfigFactory),
-    MemberModule,
     AuthModule,
+    FcmModule,
+    MemberModule,
+    PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

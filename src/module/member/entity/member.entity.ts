@@ -1,19 +1,19 @@
 import {
   Column,
-  CreateDateColumn,
+  CreateDateColumn, DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  UpdateDateColumn
+} from "typeorm";
 import { Post } from '../../post/entity/post.entity';
 import { Comment } from '../../comment/entity/comment.entity';
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsString } from "class-validator";
 
 @Entity()
 export class Member {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   email: string;
@@ -21,15 +21,23 @@ export class Member {
   @Column()
   password: string;
 
-  @Column()
+  @Column({nullable : true})
   @IsOptional()
   refreshToken?: string;
+
+  @Column()
+  @IsString()
+  fcmToken? : string;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
-  deletedAt: Date;
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deleteAt : Date;
+
 
   @OneToMany(() => Post, (post: Post) => post.member)
   posts: Post[];

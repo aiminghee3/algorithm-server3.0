@@ -10,9 +10,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from '../../member/entity/member.entity';
 import { Repository } from 'typeorm';
 import { extractTokenFromHeader } from "../common/utils";
+import { InvalidTokenException, TokenExpiredException } from "../exception/auth.exception";
 
 @Injectable()
-export class MemberAuthGuard implements CanActivate {
+export class JwtAccessGuard implements CanActivate {
   constructor(
     @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,
@@ -35,10 +36,10 @@ export class MemberAuthGuard implements CanActivate {
       // so that we can access it in our route handlers
       request['user'] = await this.memberRepository.findOne({ where: { id: payload.userId } });
     } catch (error){
-      if(error.name === 'TokenExpiredError'){
-        throw new TokenExpiredError("Access Token Expired", error.expiredAt);
+      if(error instanceof TokenExpiredError){ // 이 밑에 커스텀 에러 나중에 터미널에도 에러로그 출력되게 바꿔야함
+        throw new TokenExpiredException()
       }
-      throw new UnauthorizedException();
+      throw new InvalidTokenException();
     }
     return true;
   }

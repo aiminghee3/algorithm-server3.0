@@ -1,11 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
 import { MemberJwtPayloadDto } from '../dto/payload.dto';
 import { Member } from '../../member/entity/member.entity';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import { LoginResponseDto } from '../dto/login-response.dto';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class AuthService {
 
     return await this.jwtService.signAsync(payload, {
       secret: this.configService.get('JWT_ACCESS_TOKEN_MEMBER_SECRET_KEY'),
-      expiresIn: this.configService.get('JWT_ACCESS_TOKEN_EXPIRES_TIME'),
+      expiresIn: `${this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRES_TIME')}s`
     });
   }
 
@@ -54,7 +54,7 @@ export class AuthService {
 
     return await this.jwtService.signAsync(payload, {
       secret: this.configService.get('JWT_REFRESH_TOKEN_MEMBER_SECRET_KEY'),
-      expiresIn: this.configService.get('JWT_REFRESH_TOKEN_EXPIRES_TIME'),
+      expiresIn: `${this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRES_TIME')}s`,
     });
   }
 
@@ -65,12 +65,15 @@ export class AuthService {
   async validateMember(
     email: string,
     password: string,
-  ): Promise<Member | UnauthorizedException> {
+  ): Promise<Member> {
     const member: Member | null = await this.memberRepository.findOneBy({
       email: email,
     });
-    if (!member || !(await this.checkPassword(password, member.password))) {
-      throw new UnauthorizedException();
+    if (!member) {
+      throw new NotFoundException('존재하지 않는 회원입니다.');
+    }
+    else if(!(await this.checkPassword(password, member.password))){
+      throw new BadRequestException('비밀번호가 일치하지 않습니다.');
     }
     return member;
   }

@@ -6,6 +6,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Member } from "../../member/entity/member.entity";
 import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
+import { InvalidTokenException } from "../exception/auth.exception";
 
 @Injectable()
 export class JwtRefreshGuard implements CanActivate {
@@ -21,7 +22,7 @@ export class JwtRefreshGuard implements CanActivate {
         const token : string = extractTokenFromHeader(request);
 
         if(!token){
-          throw new UnauthorizedException();
+          throw new InvalidTokenException();
         }
       try {
         const payload = await this.jwtService.verifyAsync(token, {
@@ -29,12 +30,13 @@ export class JwtRefreshGuard implements CanActivate {
         });
         // 💡 We're assigning the payload to the request object here
         // so that we can access it in our route handlers
+
         request['user'] = await this.memberRepository.findOne({ where: { id: payload.userId } });
       } catch (error){
         if(error.name === 'TokenExpiredError'){
           throw new TokenExpiredError("Refresh Token Expired", error.expiredAt);
         }
-        throw new UnauthorizedException();
+        throw new InvalidTokenException();
       }
       return true;
     }

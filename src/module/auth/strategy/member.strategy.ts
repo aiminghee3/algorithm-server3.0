@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../service/auth.service';
@@ -15,10 +15,10 @@ export class MemberStrategy extends PassportStrategy(Strategy, 'member') {
   async validate(
     email: string,
     password: string,
-  ): Promise<Member | UnauthorizedException> {
+  ): Promise<Member> {
     const member = await this.authService.validateMember(email, password);
     if(!member){
-      throw new UnauthorizedException();
+      throw new NotFoundException('존재하지 않는 회원입니다.');
     }
     return member;
   }
