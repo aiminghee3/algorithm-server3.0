@@ -6,7 +6,7 @@ services:
       - .env
       - .env.prod
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - db:/var/lib/mysql
     networks:
@@ -16,6 +16,7 @@ services:
     build:
       context: ./
       dockerfile: dockerfile
+    platform: linux/amd64
     container_name: server
     env_file:
       - .env
