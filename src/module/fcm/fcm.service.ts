@@ -53,7 +53,7 @@ export class FcmService {
     const payload = {
       token: token,
       notification: {
-        title: title + '복습 알림입니다.',
+        title: title + '문제 복습 알림입니다.',
         body: '오늘은' + title + '을(를) 복습하는 날입니다.',
       },
       data: {
