@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
-import * as firebaseConfig from './fcm.json';
 import * as admin from 'firebase-admin';
 import * as cron from 'node-cron';
 import { v4 as uuidv4 } from 'uuid';
