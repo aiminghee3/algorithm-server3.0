@@ -76,7 +76,8 @@ export class PostController{
   @Put(':id')
   @IsPostOwnerGuard()
   @updatePostSwagger()
-  async updatePost(@Param() postId : IdParam, @Body() body : CreatePostDto): Promise<CreatedTimeResponse> {
+  async updatePost(@Req() req, @Param() postId : IdParam, @Body() body : CreatePostDto): Promise<CreatedTimeResponse> {
+    await this.notificationService.scheduleNotification(<Member>req.user, body.title, body.alarm);
     return await this.postService.updatePost(postId.id, body);
   }
 

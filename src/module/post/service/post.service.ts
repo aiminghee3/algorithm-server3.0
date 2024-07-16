@@ -121,7 +121,7 @@ export class PostService{
   async updatePost(postId : string, updatePostDto : CreatePostDto) : Promise<CreatedTimeResponse>{
     try {
       await this.postRepository.manager.transaction(async (transaction: EntityManager) => {
-        const post = await transaction.findOne(Post, { where: { id: postId }, relations: ['postHashtags', 'member'] });
+        const post = await transaction.findOne(Post, { where: { id: postId }, relations: ['postHashtags'] });
         const image = await this.imageRepository.findOneBy({id : updatePostDto.rate.toString()})
         if (!post) {
           throw new NotFoundException('존재하지 않는 게시글입니다.');
