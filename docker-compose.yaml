@@ -29,6 +29,13 @@ services:
     tty: true
     networks:
       - server
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    network:
+      - server
 volumes:
     db:
 networks:
