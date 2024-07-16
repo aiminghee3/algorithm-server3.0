@@ -28,13 +28,18 @@ import {
   getPostSwagger,
   updatePostSwagger
 } from "./post-swagger.decorator";
+import { NotificationService } from "../../notification/service/notification.service";
+import { Member } from "../../member/entity/member.entity";
 
 
 @ApiTags('post')
 @Controller('post')
 @UsePipes(new ValidationPipe({ transform: true }))
 export class PostController{
-  constructor(private readonly postService : PostService) {}
+  constructor(
+    private readonly postService : PostService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
 
   @Version('3')
@@ -42,36 +47,38 @@ export class PostController{
   @JwtVerifyAuthGuard()
   @createPostSwagger()
   async createPost(@Req() req, @Body() body: CreatePostDto): Promise<CreatedTimeResponse> {
-    return this.postService.createPost(req.user.id, body);
+    await this.notificationService.scheduleNotification(<Member>req.user, body.title, body.alarm);
+    return await this.postService.createPost(req.user.id, body);
   }
 
   @Version('3')
   @Get('/all')
   @getAllPostSwagger()
   async getAllPost(@Query() query : GetAllPostQuery) : Promise<GetAllPostDto>{
-    return this.postService.getAllPost(query);
+    return await this.postService.getAllPost(query);
   }
 
   @Version('3')
   @Get('/mypage')
   @JwtVerifyAuthGuard()
   async getOwnerPost(@Req() req, @Query() query : GetAllPostQuery) : Promise<GetAllPostDto>{
-    return this.postService.getOwnerPost(req.user.id, query);
+    return await this.postService.getOwnerPost(req.user.id, query);
   }
 
   @Version('3')
   @Get(':id')
   @getPostSwagger()
   async getPost(@Param() postId : IdParam) : Promise<GetPostDetailDto>{
-    return this.postService.getPost(postId.id);
+    return await this.postService.getPost(postId.id);
   }
 
   @Version('3')
   @Put(':id')
   @IsPostOwnerGuard()
   @updatePostSwagger()
-  async updatePost(@Param() postId : IdParam, @Body() body : CreatePostDto): Promise<CreatedTimeResponse> {
-    return this.postService.updatePost(postId.id, body);
+  async updatePost(@Req() req, @Param() postId : IdParam, @Body() body : CreatePostDto): Promise<CreatedTimeResponse> {
+    await this.notificationService.scheduleNotification(<Member>req.user, body.title, body.alarm);
+    return await this.postService.updatePost(postId.id, body);
   }
 
   @Version('3')
@@ -79,6 +86,6 @@ export class PostController{
   @IsPostOwnerGuard()
   @deletePostSwagger()
   async deletePost(@Query() query: DeleteQuery): Promise<CreatedTimeResponse> {
-    return this.postService.deletePost(query.ids);
+    return await this.postService.deletePost(query.ids);
   }
 }

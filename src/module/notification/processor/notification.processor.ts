@@ -1,16 +1,15 @@
-import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
-import * as admin from 'firebase-admin';
-import * as cron from 'node-cron';
-import { v4 as uuidv4 } from 'uuid';
+import { Process, Processor } from "@nestjs/bull";
+import { Injectable } from "@nestjs/common";
+import { Job } from "bull";
+import * as admin from "firebase-admin";
 import { ConfigService } from "@nestjs/config";
 
-const jobs = {};
-
 @Injectable()
-export class FcmService {
+@Processor('notification')
+export class NotificationProcessor{
   constructor(
     private readonly configService: ConfigService,
-  ) {
+  ){
     const firebase_params = {
       type: this.configService.get<string>('FIREBASE_TYPE'),
       projectId: this.configService.get<string>('FIREBASE_PROJECT_ID'),
@@ -30,26 +29,10 @@ export class FcmService {
     }
   }
 
-  async scheduleNotification(fcmToken : string, title : string, dateString : Date) {
-    const date = new Date(dateString);
-    const jobId: string = uuidv4();
-    if (jobs[jobId]) {
-      console.log(`Job with ID ${jobId} already exists. Skipping creation.`);
-      return;
-    }
-    const cronTime = `0 0 9 ${date.getDate()} ${date.getMonth() + 1} *`;
+  @Process('sendNotification')
+  async handleSendNotification(job: Job){
+    const { token, title } = job.data;
 
-    const job = cron.schedule(cronTime, () => {
-      this.sendMessage(fcmToken, title);
-      job.stop();
-      delete jobs[jobId];
-    });
-
-    jobs[jobId] = job;
-  }
-
-
-  async sendMessage(token: string, title: string) {
     const payload = {
       token: token,
       notification: {
@@ -76,6 +59,7 @@ export class FcmService {
         // return false;
         return { error: error.code };
       });
+    console.log('test');
     return result;
   }
 }
