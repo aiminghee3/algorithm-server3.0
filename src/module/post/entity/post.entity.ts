@@ -45,14 +45,14 @@ export class Post {
   })
   problem_link: string;
 
-  @Column()
+  @Column({default : 1})
   @ApiProperty({
     type: number,
     example: '중요도',
   })
   rate: number;
 
-  @Column()
+  @Column({ type: 'text' })
   @ApiProperty({
     type: text,
     example: '내용',
