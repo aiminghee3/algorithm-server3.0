@@ -20,8 +20,5 @@ export class NotificationService {
         { delay }
       )
     }
-    else{
-      throw new Error('알람 시간이 현재 시간보다 이전입니다.')
-    }
   }
 }
