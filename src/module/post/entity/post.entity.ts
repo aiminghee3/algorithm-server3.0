@@ -54,7 +54,7 @@ export class Post {
 
   @Column({ type: 'text' })
   @ApiProperty({
-    type: text,
+    type: String,
     example: '내용',
   })
   content: string;
