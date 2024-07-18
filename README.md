@@ -10,6 +10,8 @@
 - [웹사이트](https://www.codereview.site/)
 - [프론트 레포지토리](https://github.com/aiminghee3/board_front)
 
+## 🛠️ Erd
+<img alt="erd" src="https://github.com/user-attachments/assets/721a0eaa-c6a2-49ed-bda8-1ffae75d6f5d"/>
 
 ## 🛠️ Back Architecture
 <img src = "https://github.com/user-attachments/assets/6f390443-145d-4137-a743-52fd028517e6" alt = "backend Architecture"/>
