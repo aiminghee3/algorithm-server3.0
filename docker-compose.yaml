@@ -29,6 +29,7 @@ services:
     tty: true
     networks:
       - server
+    command: sh -c "npm run build && npx typeorm migration:run && npm run start:prod"
 
   redis:
     image: redis
