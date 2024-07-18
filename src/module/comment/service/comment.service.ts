@@ -38,7 +38,7 @@ export class CommentService{
     }
     if(createComment.parentId){
       const parentComment : Comment = await this.commentRepository.findOne({where : {id : createComment.parentId}});
-      comment = this.commentRepository.create({post, member, comment : createComment.comment, parent : parentComment, depth : depth});
+      comment = this.commentRepository.create({post, member, comment : createComment.comment, parent : parentComment, depth : depth + 1});
     }
     else{
       comment = this.commentRepository.create({post, member, comment : createComment.comment, depth : depth});
