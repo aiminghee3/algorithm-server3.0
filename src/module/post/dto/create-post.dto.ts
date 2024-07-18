@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { text } from "express";
+import { Transform } from "class-transformer";
 
 export class CreatePostDto{
   @ApiProperty({
@@ -32,10 +34,11 @@ export class CreatePostDto{
   })
   @IsNumber()
   @IsNotEmpty()
+  @Transform(({ value }) => (value === 0 ? 1 : value), { toClassOnly: true })
   rate : number;
 
   @ApiProperty({
-    type : String,
+    type: text,
     example : '내용입니다.',
   })
   @IsString()

@@ -45,7 +45,7 @@ export class Post {
   })
   problem_link: string;
 
-  @Column({default : 1})
+  @Column()
   @ApiProperty({
     type: number,
     example: '중요도',
