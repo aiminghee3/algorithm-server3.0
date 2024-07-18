@@ -38,6 +38,6 @@ services:
     networks:
       - server
 volumes:
-    db:
+  db:
 networks:
   server:
