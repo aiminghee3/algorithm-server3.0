@@ -10,7 +10,7 @@
 - [웹사이트](https://www.codereview.site/)
 - [프론트 레포지토리](https://github.com/aiminghee3/board_front)
 
-## 🛠️ Erd
+## 💡 Erd
 <img alt="erd" src="https://github.com/user-attachments/assets/721a0eaa-c6a2-49ed-bda8-1ffae75d6f5d"/>
 
 ## 🛠️ Back Architecture
@@ -20,4 +20,20 @@
 <img src = "https://github.com/user-attachments/assets/cfb9bbe3-4865-4ed3-88ee-b0f6cd3cc06b" alt = "front Architecture"/>
 
 
+## 📑 페이지
+
+### 메인페이지
+<img src = "https://github.com/user-attachments/assets/39626cb8-76f8-434f-a8b1-59adc7ae2529" alt = "main"/>
+
+### 상세페이지
+<img src = "https://github.com/user-attachments/assets/227caa3e-1c32-4bb0-9e4a-a6417a08b524" alt = "detail"/>
+
+### 댓글작성
+<img src = "https://github.com/user-attachments/assets/c5d30644-c899-42a8-b1d2-618b2e28a6ed" alt = "댓글작성"/>
+
+### 답글작성
+<img src = "https://github.com/user-attachments/assets/c7df47f1-b3ea-491e-9095-8999edfc7041" alt ="답글작성"/>
+
+### 웹 푸시알림 (메시지 큐 활용)
+<img src = "https://github.com/user-attachments/assets/fce5ec8b-4216-4723-afff-29bd535cc4ef" alt = "alarm"/>
 
