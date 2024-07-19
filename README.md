@@ -9,6 +9,7 @@
 ## 🔗 Link
 - [웹사이트](https://www.codereview.site/)
 - [프론트 레포지토리](https://github.com/aiminghee3/board_front)
+- [프로젝트 후기](https://matrix-o.tistory.com/16)
 
 ## 💡 Erd
 <img alt="erd" src="https://github.com/user-attachments/assets/721a0eaa-c6a2-49ed-bda8-1ffae75d6f5d"/>
