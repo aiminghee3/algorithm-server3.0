@@ -13,6 +13,8 @@ import { GetAllPostDto, GetAllPostQuery, GetPostDto } from "../dto/get-all-post.
 import { GetPostDetailDto, hashtagDto } from "../dto/get-post-detail.dto";
 import { plainToClass } from "class-transformer";
 import { Image } from "../../image/entity/image.entity";
+import { EntityNotFoundException, InternalServerException } from "../../../common/exception";
+import { INTERNAL_SERVER_ERROR } from "../../../common/exception/error-code";
 
 @Injectable()
 export class PostService{
@@ -34,7 +36,7 @@ export class PostService{
   async createPost(memberId : string, post : CreatePostDto) : Promise<CreatedTimeResponse>{
     const member : Member = await this.memberRepository.findOneBy({id : memberId});
     if(!member){
-      throw new NotFoundException('존재하지 않는 회원입니다.');
+      throw EntityNotFoundException('존재하지 않는 회원입니다.');
     }
     const image = await this.imageRepository.findOneBy({id : post.rate.toString()})
     const createdPost: Post = this.postRepository.create(post);
@@ -56,6 +58,7 @@ export class PostService{
   }
 
   async getPost(postId : string) : Promise<GetPostDetailDto>{
+
     const post = await this.postRepository
       .createQueryBuilder('post')
       .leftJoinAndSelect('post.postHashtags', 'postHashtags')
@@ -70,7 +73,7 @@ export class PostService{
       .getOne();
 
     if(!post){
-      throw new NotFoundException('존재하지 않는 게시글입니다.');
+      throw EntityNotFoundException('존재하지 않는 게시글입니다.');
     }
 
     return plainToClass(GetPostDetailDto, {
@@ -124,7 +127,10 @@ export class PostService{
         const post = await transaction.findOne(Post, { where: { id: postId }, relations: ['postHashtags'] });
         const image = await this.imageRepository.findOneBy({id : updatePostDto.rate.toString()})
         if (!post) {
-          throw new NotFoundException('존재하지 않는 게시글입니다.');
+          throw EntityNotFoundException('존재하지 않는 게시글입니다.');
+        }
+        else if(!image){
+          throw EntityNotFoundException('존재하지 않는 이미지 입니다.')
         }
         post.postHashtags = [];
         const updatePost = {
@@ -146,8 +152,7 @@ export class PostService{
       });
       return { created: new Date() };
     }catch(error){
-      this.logger.error(error);
-      throw new InternalServerErrorException();
+      throw error;
     }
   }
 
@@ -157,7 +162,7 @@ export class PostService{
         for (const id of postIds) {
           const post = await transaction.findOne(Post, {where : {id : id}});
           if (!post) {
-            throw new NotFoundException(id + '번 아이디는 존재하지 않는 게시글입니다.');
+            throw EntityNotFoundException(id + '번 아이디는 존재하지 않는 게시글입니다.');
           }
           await transaction.delete(Post, { id: id })
         }
@@ -165,9 +170,7 @@ export class PostService{
       return { created: new Date() };
     }
     catch(error){
-      this.logger.error(error);
-      this.logger.error(postIds);
-      throw new InternalServerErrorException();
+      throw error;
     }
   }
 

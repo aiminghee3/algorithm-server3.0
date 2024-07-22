@@ -5,6 +5,7 @@ import { swaggerConfig } from './config/swagger-config';
 import cookieParser from 'cookie-parser';
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config'
+import { ServiceExceptionToHttpExceptionFilter } from "./common/exception/exception-filter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,7 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new ServiceExceptionToHttpExceptionFilter())
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, document);
